@@ -32,5 +32,5 @@
   register: hadoop_uncompressed
 
 - name: Fix path to /etc/hadoop
-  file: src=/usr/etc/hadoop est=/etc/hadoop state=link
+  file: src=/usr/etc/hadoop dest=/etc/hadoop state=link
   when: hadoop_uncompressed|success and hadoop_tar_url is defined
