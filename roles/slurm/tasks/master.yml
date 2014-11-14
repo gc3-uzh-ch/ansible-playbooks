@@ -5,12 +5,29 @@
     - slurm-acct.txt
     - slurm-jobs.txt
 
-- name: Install slurmdbd, used for accounting
+- name: Install slurmdbd and MySQL, used for accounting
   apt: name={{item}} state=installed
   with_items:
     - "{{ slurmdbd_name }}"
     - mysql-server
     - python-mysqldb
+  when: is_debian_or_ubuntu
+  tags:
+    - slurm
+
+
+- name: Install MySQL, used for accounting
+  yum: name={{item}} state=installed
+  with_items:
+    - mysql-server
+    - MySQL-python
+  when: is_centos
+  tags:
+    - slurm
+
+- name: Ensure MySQL daemon is up (CentOS)
+  service: name=mysqld state=started
+  when: is_centos
   tags:
     - slurm
 
