@@ -10,11 +10,15 @@
   tasks:
     - set_fact:
         slurm_name: slurm-llnl
+        slurmdbd_name: slurm-llnl-slurmdbd
       when: is_debian_or_ubuntu
+      tags: slurm
 
     - set_fact:
         slurm_name: slurm
+        slurmdbd_name: slurm-slurmdbd
       when: is_centos
+      tags: slurm
 
     - include: common/tasks/ssh_host_based_authentication.yml hosts={{groups.all}}
     - include: slurm/tasks/main.yml
@@ -28,6 +32,10 @@
 
 - name: Slurm master Playbook
   hosts: slurm_master
+  vars:
+    slurmdbd_mysql_db: "{{slurm_mysql_db|default('slurm')}}"
+    slurmdbd_mysql_user: "{{slurm_mysql_user|default('slurm')}}"
+    slurmdbd_mysql_pwd: "{{slurm_mysql_pwd|default('ua7diKee')}}"
   vars_files:
     - vars/os
   tasks: 
